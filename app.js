@@ -2,6 +2,7 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const handlebars = require('express-handlebars');
 
 const rootDir = require('./utils/path');
 
@@ -10,7 +11,13 @@ const shopRoutes = require('./routes/shop');
 
 const app = express();
 
-app.set('view engine', 'pug');
+app.engine('handlebars',
+    handlebars({
+        layoutsDir: 'views/layouts/',
+        defaultLayout: 'main-layout',
+        extname: 'handlebars'
+    }));
+app.set('view engine', 'handlebars');
 app.set('views', 'views');
 
 app.use(bodyParser.urlencoded());
