@@ -15,10 +15,10 @@
                                     </h1>
                                 </header>
                                 <div class="card__image">
-                                    <img src="<%= product.imageurl %>" alt="<%= product.title %>">
+                                    <img src="<%= product.imageUrl %>" alt="<%= product.title %>">
                                 </div>
                                 <div class="card__content">
-                                    <h2 class="product__price">$<%= product.price %>
+                                    <h2 class="product__price">$ <%= product.price %>
                                     </h2>
                                     <p class="product__description">
                                         <%= product.description %>
@@ -36,6 +36,7 @@
                         <h1>No Products Found!</h1>
                         <% } %>
             </main>
+            <script src="/js/main.js"></script>
     </body>
 
     </html>
