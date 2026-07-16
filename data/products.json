@@ -1,9 +1,1 @@
-[
-    {
-        "title": "Book 1",
-        "imageUrl": "https://www.publicdomainpictures.net/pictures/10000/velka/1-1210009435EGmE.jpg",
-        "price": "99.99",
-        "description": "Amazing Book 1",
-        "id": "0.500313623774287"
-    }
-]
+[{"title":"Book 1","imageUrl":"https://www.publicdomainpictures.net/pictures/10000/velka/1-1210009435EGmE.jpg","price":"99.99","description":"Amazing Book 1","id":"0.500313623774287"},{"title":"Book 2","imageUrl":"https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png","price":"19.99","description":"Amazing Book 2","id":"0.2840357704018005"}]
