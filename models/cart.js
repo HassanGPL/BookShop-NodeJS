@@ -57,9 +57,17 @@ module.exports = class Cart {
             const product = cart.products.find(prod => prod.id === id);
             cb(product);
         });
-
     }
 
-
+    static getCart(cb) {
+        fs.readFile(p, (err, data) => {
+            const cart = { ...JSON.parse(data) };
+            if (err) {
+                cb(null);
+            } else {
+                cb(cart);
+            }
+        });
+    }
 
 }

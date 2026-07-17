@@ -4,7 +4,18 @@
     <body>
         <%- include('../includes/nav.ejs') %>
             <main>
-                <h1>Cart...</h1>
+                <% if(products.length> 0) { %>
+                    <ul>
+                        <% for(product of products) { %>
+                            <li>
+                                <%= product.productData.title %> (<%= product.qty %>)
+                            </li>
+                            <% } %>
+                    </ul>
+
+                    <% } else { %>
+                        <h1>No Products in Cart!</h1>
+                        <% } %>
             </main>
             <script src="/js/main.js"></script>
     </body>
