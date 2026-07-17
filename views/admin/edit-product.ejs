@@ -28,10 +28,12 @@
                         <textarea name="description" id="description"
                             rows="5"><% if(editing) { %><%= product.description %><% } %></textarea>
                     </div>
-
-                    <button class="btn" type="submit">
-                        <% if(editing) { %> Update Product <% } else { %> Add Product <% } %>
-                    </button>
+                    <% if(editing) { %>
+                        <input type="hidden" name="productId" value="<%= product.id %>">
+                        <% } %>
+                            <button class="btn" type="submit">
+                                <% if(editing) { %> Update Product <% } else { %> Add Product <% } %>
+                            </button>
                 </form>
             </main>
             <script src="/js/main.js"></script>
