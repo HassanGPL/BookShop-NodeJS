@@ -2,9 +2,8 @@ const Product = require('../models/product');
 const Cart = require('../models/cart');
 
 exports.getIndex = (req, res, next) => {
-    Product.fetchAll()
-        .then(productsData => {
-            const products = productsData[0];
+    Product.findAll()
+        .then(products => {
             res.render('shop/index', {
                 products: products,
                 pageTitle: "Shop",
@@ -16,14 +15,14 @@ exports.getIndex = (req, res, next) => {
 
 
 exports.getProducts = (req, res, next) => {
-    Product.fetchAll().then(productsData => {
-        const products = productsData[0];
-        res.render('shop/product-list', {
-            products: products,
-            pageTitle: "All Products",
-            path: '/products',
-        });
-    }).catch(err => console.log(err));
+    Product.findAll()
+        .then(products => {
+            res.render('shop/product-list', {
+                products: products,
+                pageTitle: "All Products",
+                path: '/products',
+            });
+        }).catch(err => console.log(err));
 }
 
 exports.getProduct = (req, res, next) => {
