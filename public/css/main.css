@@ -169,6 +169,14 @@ form {
   width: 100%;
 }
 
+.image {
+  max-height: 20rem;
+}
+
+.image img {
+  height: 100%;
+}
+
 .card__actions {
   padding: 1rem;
   text-align: center;
