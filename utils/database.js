@@ -9,7 +9,7 @@ const mongoConnection = (cb) => {
         .connect('mongodb+srv://hassanahmed11920_db_user:Jtzabjwln4UxfuJF@cluster0.bbisxfp.mongodb.net/shop?appName=Cluster0')
         .then(client => {
             console.log('MONGODB CONNECTED!');
-            _db = client.db;
+            _db = client.db();
             cb();
         })
         .catch(err => {
