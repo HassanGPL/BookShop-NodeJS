@@ -21,6 +21,7 @@ class User {
             .findOne({ _id: id })
             .then(user => {
                 console.log(user);
+                return user;
             }).catch(err => console.log(err));
     }
 }
