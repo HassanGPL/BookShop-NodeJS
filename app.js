@@ -9,6 +9,7 @@ const shopRoutes = require('./routes/shop');
 const errorController = require('./controllers/error');
 
 const mongoConnection = require('./utils/database').mongoConnection;
+const User = require('./models/user');
 
 const app = express();
 
@@ -19,12 +20,12 @@ app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
-    // User.findByPk(1)
-    //     .then(user => {
-    //         req.user = user;
-    //         next();
-    //     })
-    //     .catch(err => console.log(err));
+    User.findById('6a78fbec20e75765bc03dbc2')
+        .then(user => {
+            req.user = user;
+            next();
+        })
+        .catch(err => console.log(err));
     next();
 })
 

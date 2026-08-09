@@ -39,11 +39,10 @@ class Product {
         const db = getDb();
         const id = new mongodb.ObjectId(productId);
         return db.collection('products')
-            .find({ _id: id })
-            .next()
-            .then(products => {
-                console.log(products);
-                return products;
+            .findOne({ _id: id })
+            .then(product => {
+                console.log(product);
+                return product;
             })
             .catch(err => console.log(err));
     }
