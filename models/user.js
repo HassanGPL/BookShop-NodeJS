@@ -99,6 +99,12 @@ class User {
             }).catch(err => console.log(err));
     }
 
+    getOrders() {
+        const db = getDb();
+        const userId = new mongodb.ObjectId(this._id);
+        return db.collection('orders').find({ 'user._id': userId }).toArray();
+    }
+
     static findById(userId) {
         const db = getDb();
         const id = new mongodb.ObjectId(userId);
