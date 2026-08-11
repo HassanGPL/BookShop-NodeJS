@@ -53,7 +53,8 @@ class User {
             .find({ _id: { $in: productIds } })
             .toArray()
             .then(products => {
-                return products.map(product => {
+                // Filter cart items to only include products that still exist in the collection
+                const validCartItems = products.map(product => {
                     return {
                         ...product,
                         quantity: this.cart.items.find(i => {
@@ -61,6 +62,21 @@ class User {
                         }).quantity
                     }
                 })
+
+                // If there are deleted products, update the cart in database
+                if (validCartItems.length < this.cart.items.length) {
+                    const validProductIds = products.map(p => p._id.toString());
+                    const updatedCartItems = this.cart.items.filter(item => {
+                        return validProductIds.includes(item.productId.toString());
+                    });
+
+                    const userId = new mongodb.ObjectId(this._id);
+                    return db.collection('users')
+                        .updateOne({ _id: userId }, { $set: { cart: { items: updatedCartItems } } })
+                        .then(() => validCartItems);
+                }
+
+                return validCartItems;
             })
     }
 
