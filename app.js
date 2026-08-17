@@ -3,12 +3,13 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const mongoose = require('mongoose');
+
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
 const errorController = require('./controllers/error');
 
-const mongoConnection = require('./utils/database').mongoConnection;
 const User = require('./models/user');
 
 const app = express();
@@ -33,6 +34,10 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoConnection(() => {
-    app.listen(3000);
-})
+mongoose
+    .connect('mongodb+srv://hassanahmed11920_db_user:Jtzabjwln4UxfuJF@cluster0.bbisxfp.mongodb.net/shop?appName=Cluster0')
+    .then(result => {
+        console.log('Database Connected!');
+        app.listen(3000);
+    })
+    .catch(err => console.log(err));
