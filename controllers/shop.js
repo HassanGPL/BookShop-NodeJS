@@ -96,10 +96,8 @@ exports.postOrder = (req, res, next) => {
 
             return order.save();
         })
-        .then(result => {
-            console.log(user.cart.items);
-            res.redirect('/orders');
-        })
+        .then(() => user.clearCart())
+        .then(() => res.redirect('/orders'))
         .catch(err => console.log(err));
 }
 
