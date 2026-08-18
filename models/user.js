@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const Product = require('./product');
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -39,6 +41,44 @@ userSchema.methods.addToCart = function (product) {
     this.cart = updatedCart;
 
     return this.save()
+}
+
+
+userSchema.methods.getCart = function () {
+    const productIds = this.cart.items.map(p => {
+        return p.productId;
+    })
+
+    // Return early if cart is empty
+    if (productIds.length === 0) {
+        return Promise.resolve([]);
+    }
+
+    return Product
+        .find({ _id: { $in: productIds } })
+        .lean()
+        .exec()
+        .then(products => {
+            // Create a Map of existing products for O(1) lookups
+            const productMap = new Map(products.map(p => [p._id.toString(), p]));
+
+            // Filter cart items to only include those with existing products
+            const validCartItems = this.cart.items
+                .filter(item => productMap.has(item.productId.toString()))
+                .map(cartItem => ({
+                    ...productMap.get(cartItem.productId.toString()),
+                    quantity: cartItem.quantity
+                }));
+
+            // If there were deleted products, update the cart in database
+            if (validCartItems.length < this.cart.items.length) {
+                this.cart = { items: this.cart.items.filter(item => productMap.has(item.productId.toString())) };
+                return this.save().then(() => validCartItems);
+            }
+
+            return validCartItems;
+        })
+
 }
 
 module.exports = mongoose.model('User', userSchema);
