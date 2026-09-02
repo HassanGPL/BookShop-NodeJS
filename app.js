@@ -22,6 +22,12 @@ app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
+    req.loggedIn = req.get('Cookie')?.split('=')[1] === 'true';
+    res.locals.isLoggedIn = req.loggedIn;
+    next();
+});
+
+app.use((req, res, next) => {
     User.findById('6a8484df24be51541680461b')
         .then(user => {
             req.user = user;

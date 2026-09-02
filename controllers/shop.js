@@ -8,6 +8,7 @@ exports.getIndex = (req, res, next) => {
                 products: products,
                 pageTitle: "Shop",
                 path: '/',
+                isLoggedIn: req.loggedIn
             });
         })
         .catch(err => console.log(err));
@@ -21,6 +22,7 @@ exports.getProducts = (req, res, next) => {
                 products: products,
                 pageTitle: "All Products",
                 path: '/products',
+                isLoggedIn: req.loggedIn
             });
         }).catch(err => console.log(err));
 }
@@ -32,7 +34,8 @@ exports.getProduct = (req, res, next) => {
             res.render('shop/product-detail', {
                 product: product,
                 pageTitle: product.title,
-                path: '/products'
+                path: '/products',
+                isLoggedIn: req.loggedIn
             });
         }).catch(err => console.log(err));
 }
@@ -45,7 +48,8 @@ exports.getCart = (req, res, next) => {
             res.render('shop/cart', {
                 path: '/cart',
                 pageTitle: 'Cart',
-                products: products
+                products: products,
+                isLoggedIn: req.loggedIn
             });
         })
         .catch(err => console.log(err));
@@ -109,7 +113,8 @@ exports.getOrders = (req, res, next) => {
             res.render('shop/orders', {
                 path: '/orders',
                 pageTitle: 'Orders',
-                orders: orders
+                orders: orders,
+                isLoggedIn: req.loggedIn
             });
         }).catch(err => console.log(err));
 }
