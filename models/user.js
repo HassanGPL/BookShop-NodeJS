@@ -12,6 +12,11 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     cart: {
+        totalPrice: {
+            type: Number,
+            default: 0,
+            min: 0
+        },
         items: [{
             productId: { type: mongoose.Types.ObjectId, ref: 'Product', required: true },
             quantity: { type: Number, required: true }
@@ -40,7 +45,19 @@ userSchema.methods.addToCart = function (product) {
     const updatedCart = { items: updatedCartItems };
     this.cart = updatedCart;
 
-    return this.save()
+    return Product
+        .find({ _id: { $in: updatedCartItems.map(item => item.productId) } })
+        .lean()
+        .then(products => {
+            this.cart.totalPrice = products.reduce((total, item) => {
+                const cartItem = updatedCartItems.find(cartItem => {
+                    return cartItem.productId.toString() === item._id.toString();
+                });
+                return total + item.price * cartItem.quantity;
+            }, 0);
+            this.cart.totalPrice = Number(this.cart.totalPrice.toFixed(2));
+            return this.save();
+        });
 }
 
 
@@ -73,6 +90,10 @@ userSchema.methods.getCart = function () {
             // If there were deleted products, update the cart in database
             if (validCartItems.length < this.cart.items.length) {
                 this.cart = { items: this.cart.items.filter(item => productMap.has(item.productId.toString())) };
+                this.cart.totalPrice = validCartItems.reduce((total, item) => {
+                    return total + item.price * item.quantity;
+                }, 0);
+                this.cart.totalPrice = Number(this.cart.totalPrice.toFixed(2));
                 return this.save().then(() => validCartItems);
             }
 
@@ -86,11 +107,23 @@ userSchema.methods.deleteItemFromCart = function (productId) {
         return item.productId.toString() !== productId.toString();
     });
     this.cart.items = updatedCartItems;
-    return this.save();
+    return Product
+        .find({ _id: { $in: updatedCartItems.map(item => item.productId) } })
+        .lean()
+        .then(products => {
+            this.cart.totalPrice = products.reduce((total, product) => {
+                const cartItem = updatedCartItems.find(item => {
+                    return item.productId.toString() === product._id.toString();
+                });
+                return total + product.price * cartItem.quantity;
+            }, 0);
+            this.cart.totalPrice = Number(this.cart.totalPrice.toFixed(2));
+            return this.save();
+        });
 }
 
 userSchema.methods.clearCart = function () {
-    this.cart = { items: [] };
+    this.cart = { items: [], totalPrice: 0 };
     return this.save();
 }
 

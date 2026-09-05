@@ -1,5 +1,6 @@
 const Product = require('../models/product');
 const Order = require('../models/order');
+const User = require('../models/user');
 
 exports.getIndex = (req, res, next) => {
     Product.find()
@@ -45,10 +46,25 @@ exports.getCart = (req, res, next) => {
     const user = req.user;
     user.getCart()
         .then(products => {
+            const calculatedTotal = products.reduce((total, product) => {
+                return total + product.price * product.quantity;
+            }, 0);
+            const totalPrice = Number(calculatedTotal.toFixed(2));
+
+            if (user.cart.totalPrice !== totalPrice) {
+                user.cart.totalPrice = totalPrice;
+                return user.save().then(() => ({ products, totalPrice }));
+            }
+
+            return { products, totalPrice };
+        })
+        .then(({ products, totalPrice }) => {
+
             res.render('shop/cart', {
                 path: '/cart',
                 pageTitle: 'Cart',
                 products: products,
+                totalPrice: totalPrice,
                 isLoggedIn: req.loggedIn
             });
         })
@@ -80,15 +96,29 @@ exports.postCartDeleteItem = (req, res, next) => {
 
 exports.postOrder = (req, res, next) => {
     const user = req.user;
-    user
-        .populate('cart.items.productId')
-        .then(user => {
-            const products = user.cart.items.map(p => {
-                return {
-                    product: { ...p.productId._doc },
-                    quantity: p.quantity
-                }
-            });
+    const cartItems = user.cart.items;
+
+    if (cartItems.length === 0) {
+        return res.redirect('/cart');
+    }
+
+    Product.find({ _id: { $in: cartItems.map(item => item.productId) } })
+        .lean()
+        .then(productDocuments => {
+            const productMap = new Map(productDocuments.map(product => {
+                return [product._id.toString(), product];
+            }));
+            const products = cartItems
+                .filter(item => productMap.has(item.productId.toString()))
+                .map(item => ({
+                    product: productMap.get(item.productId.toString()),
+                    quantity: item.quantity
+                }));
+
+            if (products.length === 0) {
+                    res.redirect('/cart');
+                    return null;
+            }
 
             const order = new Order({
                 products: products,
@@ -100,9 +130,22 @@ exports.postOrder = (req, res, next) => {
 
             return order.save();
         })
-        .then(() => user.clearCart())
-        .then(() => res.redirect('/orders'))
-        .catch(err => console.log(err));
+        .then(order => {
+            if (!order) {
+                return null;
+            }
+
+            return User.updateOne(
+                { _id: user._id },
+                { $set: { 'cart.items': [], 'cart.totalPrice': 0 } }
+            );
+        })
+        .then(result => {
+            if (result) {
+                res.redirect('/orders');
+            }
+        })
+        .catch(err => next(err));
 }
 
 exports.getOrders = (req, res, next) => {
