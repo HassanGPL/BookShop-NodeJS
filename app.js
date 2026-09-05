@@ -40,17 +40,24 @@ app.use(session({
 
 app.use((req, res, next) => {
     req.loggedIn = req.session.loggedIn === true;
+    req.user = null;
     res.locals.isLoggedIn = req.loggedIn;
+    res.locals.user = null;
     next();
 });
 
 app.use((req, res, next) => {
-    User.findById('6a8484df24be51541680461b')
+    if (!req.session.userId) {
+        return next();
+    }
+
+    User.findById(req.session.userId)
         .then(user => {
             req.user = user;
+            res.locals.user = user;
             next();
         })
-        .catch(err => console.log(err));
+        .catch(err => next(err));
 })
 
 app.use('/admin', adminRoutes);
