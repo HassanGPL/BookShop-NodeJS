@@ -2,6 +2,8 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const session = require('express-session');
+const mongoDbStore = require('connect-mongodb-session')(session);
 
 const mongoose = require('mongoose');
 
@@ -13,16 +15,31 @@ const errorController = require('./controllers/error');
 
 const User = require('./models/user');
 
+const MONGODB_URI = 'mongodb+srv://hassanahmed11920_db_user:Jtzabjwln4UxfuJF@cluster0.bbisxfp.mongodb.net/shop?appName=Cluster0';
+
 const app = express();
+const store = new mongoDbStore({
+    uri: MONGODB_URI,
+    collection: 'sessions'
+});
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+    secret: 'session',
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 14
+    }
+}));
 
 app.use((req, res, next) => {
-    req.loggedIn = req.get('Cookie')?.split('=')[1] === 'true';
+    req.loggedIn = req.session.loggedIn === true;
     res.locals.isLoggedIn = req.loggedIn;
     next();
 });
@@ -43,7 +60,7 @@ app.use(authRoutes);
 app.use(errorController.get404);
 
 mongoose
-    .connect('mongodb+srv://hassanahmed11920_db_user:Jtzabjwln4UxfuJF@cluster0.bbisxfp.mongodb.net/shop?appName=Cluster0')
+    .connect(MONGODB_URI)
     .then(result => {
         User.findOne().then(user => {
             if (!user) {
