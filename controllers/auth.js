@@ -2,14 +2,6 @@ const bcrypt = require('bcryptjs');
 
 const User = require('../models/user');
 
-exports.getLogin = (req, res, next) => {
-    res.render('auth/login', {
-        path: '/login',
-        pageTitle: 'Login',
-        isLoggedIn: false
-    });
-}
-
 exports.getSignup = (req, res, next) => {
     res.render('auth/signup', {
         path: '/signup',
@@ -51,15 +43,39 @@ exports.postSignup = (req, res, next) => {
 
 }
 
+exports.getLogin = (req, res, next) => {
+    res.render('auth/login', {
+        path: '/login',
+        pageTitle: 'Login',
+        isLoggedIn: false
+    });
+}
+
 exports.postLogin = (req, res, next) => {
-    User.findById('6a8484df24be51541680461b')
+    const email = req.body.email;
+    const password = req.body.password;
+    User.findOne({ email: email })
         .then(user => {
-            req.session.loggedIn = true;
-            req.session.userId = user._id.toString();
-            req.session.save((err) => {
-                console.log(err);
-                res.redirect('/');
-            })
+            if (!user) {
+                return res.redirect('/login');
+            }
+
+            bcrypt
+                .compare(password, user.password)
+                .then(doMatch => {
+                    if (!doMatch) {
+                        return res.redirect('/login');
+                    }
+                    req.session.loggedIn = true;
+                    req.session.userId = user._id.toString();
+                    return req.session.save((err) => {
+                        console.log(err);
+                        res.redirect('/');
+                    });
+                }).catch(err => {
+                    console.log(err);
+                    res.redirect('/login');
+                })
         }).catch(err => console.log(err));
 }
 
