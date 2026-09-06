@@ -1,4 +1,5 @@
 const User = require('../models/user');
+
 exports.getLogin = (req, res, next) => {
     res.render('auth/login', {
         path: '/login',
@@ -15,7 +16,33 @@ exports.getSignup = (req, res, next) => {
     });
 }
 
-exports.postSignup = (req, res, next) => { }
+exports.postSignup = (req, res, next) => {
+    const name = req.body.name;
+    const email = req.body.email;
+    const password = req.body.password;
+    const confirmPasswords = req.body.confirmPasswords;
+
+    User.findOne({ email: email })
+        .then(user => {
+            if (user) {
+                return res.redirect('/signup');
+            }
+            const newUser = new User({
+                name: name,
+                email: email,
+                password: password,
+                cart: {
+                    items: [],
+                    totalPrice: 0
+                }
+            })
+            return newUser.save();
+        }).then(user => {
+            res.redirect('/login');
+        })
+        .catch(err => console.log(err));
+
+}
 
 exports.postLogin = (req, res, next) => {
     User.findById('6a8484df24be51541680461b')
