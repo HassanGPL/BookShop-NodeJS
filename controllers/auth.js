@@ -7,6 +7,16 @@ exports.getLogin = (req, res, next) => {
     });
 }
 
+exports.getSignup = (req, res, next) => {
+    res.render('auth/signup', {
+        path: '/signup',
+        pageTitle: 'Signup',
+        isLoggedIn: false
+    });
+}
+
+exports.postSignup = (req, res, next) => { }
+
 exports.postLogin = (req, res, next) => {
     User.findById('6a8484df24be51541680461b')
         .then(user => {
