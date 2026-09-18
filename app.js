@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const mongoDbStore = require('connect-mongodb-session')(session);
+const csrf = require('csurf');
 
 const mongoose = require('mongoose');
 
@@ -38,6 +39,8 @@ app.use(session({
     }
 }));
 
+app.use(csrf());
+
 app.use((req, res, next) => {
     req.loggedIn = req.session.loggedIn === true;
     req.user = null;
@@ -59,6 +62,12 @@ app.use((req, res, next) => {
         })
         .catch(err => next(err));
 })
+
+app.use((req,res,next)=>{
+    res.locals.isAuth = req.session.LoggedIn;
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
