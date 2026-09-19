@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const mongoDbStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
+const falsh = require('connect-flash');
 
 const mongoose = require('mongoose');
 
@@ -40,6 +41,7 @@ app.use(session({
 }));
 
 app.use(csrf());
+app.use(falsh());
 
 app.use((req, res, next) => {
     req.loggedIn = req.session.loggedIn === true;

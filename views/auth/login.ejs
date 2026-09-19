@@ -6,6 +6,13 @@
     <body>
         <%- include('../includes/nav.ejs') %>
             <main>
+                <div>
+                    <% if (errorMessage && errorMessage.length> 0) { %>
+                        <div class="flash-message">
+                            <%= errorMessage %>
+                        </div>
+                        <% } %>
+                </div>
                 <form class="login-form" action="/login" method="POST">
                     <div class="form-control">
                         <label for="email">E-mail</label>
