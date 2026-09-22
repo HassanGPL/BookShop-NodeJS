@@ -2,7 +2,8 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const { Resend } = require('resend');
 const User = require('../models/user');
-const resend = new Resend(process.env.RESEND_API_KEY);
+const RESEND_API_KEY = 're_your_resend_api_key';
+const resend = new Resend(RESEND_API_KEY);
 
 exports.getSignup = (req, res, next) => {
     res.render('auth/signup', {
