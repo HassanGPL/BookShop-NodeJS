@@ -33,7 +33,10 @@
     "mongodb": "^7.5.0",
     "mongoose": "^9.9.3",
     "mysql2": "^3.23.1",
+    "nodemailer": "^10.0.10",
+    "nodemailer-sendgrid-transport": "^0.2.0",
     "pug": "^3.0.4",
+    "resend": "^6.28.1",
     "sequelize": "^6.37.8"
   }
 }

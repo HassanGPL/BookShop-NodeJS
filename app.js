@@ -65,7 +65,7 @@ app.use((req, res, next) => {
         .catch(err => next(err));
 })
 
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
     res.locals.isAuth = req.session.LoggedIn;
     res.locals.csrfToken = req.csrfToken();
     next();
