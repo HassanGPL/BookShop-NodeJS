@@ -13,22 +13,27 @@
                         </div>
                         <% } %>
                 </div>
-                <form class="login-form" action="/signup" method="POST">
+                <form class="login-form" action="/signup" method="POST" novalidate>
                     <div class="form-control">
                         <label for="name">Name</label>
-                        <input type="name" name="name" id="name">
+                        <input class="<%= validationErrors.find(e => e.path === 'name') ? 'invalid' : '' %>" type="name"
+                            name="name" id="name" value="<%= oldInput.name %>">
                     </div>
                     <div class="form-control">
                         <label for="email">E-mail</label>
-                        <input type="email" name="email" id="email">
+                        <input class="<%= validationErrors.find(e => e.path === 'email') ? 'invalid' : '' %>"
+                            type="email" name="email" id="email" value="<%= oldInput.email %>">
                     </div>
                     <div class="form-control">
                         <label for="password">Password</label>
-                        <input type="password" name="password" id="password">
+                        <input class="<%= validationErrors.find(e => e.path === 'password') ? 'invalid' : '' %>"
+                            type="password" name="password" id="password" value="<%= oldInput.password %>">
                     </div>
                     <div class="form-control">
                         <label for="confirm-password">Confirm Password</label>
-                        <input type="password" name="confirmPassword" id="confirm-password">
+                        <input class="<%= validationErrors.find(e => e.path === 'confirmPassword') ? 'invalid' : '' %>"
+                            type="password" name="confirmPassword" id="confirm-password"
+                            value="<%= oldInput.confirmPassword %>">
                     </div>
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <button class="btn" type="submit">Signup</button>
