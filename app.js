@@ -52,30 +52,43 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
+    res.locals.isAuth = req.session.LoggedIn;
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
+
+app.use((req, res, next) => {
     if (!req.session.userId) {
         return next();
     }
 
     User.findById(req.session.userId)
         .then(user => {
+            if (!user) {
+                return next();
+            }
             req.user = user;
             res.locals.user = user;
             next();
         })
-        .catch(err => next(err));
-})
-
-app.use((req, res, next) => {
-    res.locals.isAuth = req.session.LoggedIn;
-    res.locals.csrfToken = req.csrfToken();
-    next();
+        .catch(err => {
+            next(new Error(err));
+        });
 });
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
+app.use('/500', errorController.get500);
 app.use(errorController.get404);
+
+app.use((error, req, res, next) => {
+    res.status(500).render('500', {
+        pageTitle: "Internal Server Error",
+        path: null
+    });
+});
 
 mongoose
     .connect(MONGODB_URI)
