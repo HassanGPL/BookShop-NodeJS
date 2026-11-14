@@ -7,7 +7,6 @@ const isAuth = require('../middleware/is-auth');
 
 const productValidators = [
     check('title').trim().notEmpty().withMessage('Title is required'),
-    check('image').trim().notEmpty().withMessage('Image is required'),
     check('price').isFloat({ gt: 0 }).withMessage('Price must be greater than zero'),
     check('description').trim().notEmpty().withMessage('Description is required')
 ];

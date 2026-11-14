@@ -31,10 +31,20 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
     const title = req.body.title;
-    const imageUrl = req.file;
+    const image = req.file;
     const price = req.body.price;
     const description = req.body.description;
-    console.log(imageUrl);
+
+    if (!image) {
+        return res.status(422).render('admin/edit-product', {
+            pageTitle: "Add Product",
+            path: "/admin/add-product",
+            editing: false,
+            oldInput: { title, price, description },
+            validationErrors: [],
+            errorMessage: "Please select a valid image."
+        });
+    }
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -42,11 +52,13 @@ exports.postAddProduct = (req, res, next) => {
             pageTitle: "Add Product",
             path: "/admin/add-product",
             editing: false,
-            oldInput: { title, imageUrl, price, description },
+            oldInput: { title, price, description },
             validationErrors: errors.array(),
             errorMessage: errors.array()[0].msg
         });
     }
+
+    const imageUrl = image.path;
 
     const product = new Product({
         title: title,
@@ -103,7 +115,7 @@ exports.getEditProduct = (req, res, next) => {
 exports.postEditProduct = (req, res, next) => {
     const productId = req.body.productId;
     const title = req.body.title;
-    const imageUrl = req.body.imageUrl;
+    const image = req.file;
     const price = req.body.price;
     const description = req.body.description;
     const errors = validationResult(req);
@@ -119,7 +131,7 @@ exports.postEditProduct = (req, res, next) => {
                     path: "/admin/edit-product",
                     editing: true,
                     product: product,
-                    oldInput: { title, imageUrl, price, description },
+                    oldInput: { title, price, description },
                     validationErrors: errors.array(),
                     errorMessage: errors.array()[0].msg
                 });
@@ -128,7 +140,9 @@ exports.postEditProduct = (req, res, next) => {
             product.title = title;
             product.price = price;
             product.description = description;
-            product.imageUrl = imageUrl;
+            if (image) {
+                product.imageUrl = image.path;
+            }
             return product.save()
                 .then(() => {
                     console.log('UPDATED PRODUCT SUCCESSFULLY!');

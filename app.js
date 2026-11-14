@@ -105,7 +105,8 @@ app.use(errorController.get404);
 app.use((error, req, res, next) => {
     res.status(500).render('500', {
         pageTitle: "Internal Server Error",
-        path: null
+        path: null,
+        isLoggedIn: false
     });
 });
 
