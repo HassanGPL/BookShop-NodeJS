@@ -90,8 +90,7 @@ exports.postCart = (req, res, next) => {
         .then(product => {
             return user.addToCart(product);
         })
-        .then(result => {
-            console.log(result);
+        .then(() => {
             res.redirect('/cart');
         }).catch(err => {
             const error = new Error(err);
@@ -104,7 +103,7 @@ exports.postCartDeleteItem = (req, res, next) => {
     const productId = req.body.productId;
     const user = req.user;
     user.deleteItemFromCart(productId)
-        .then(result => {
+        .then(() => {
             res.redirect('/cart');
         })
         .catch(err => {
@@ -160,10 +159,8 @@ exports.postOrder = (req, res, next) => {
                 { $set: { 'cart.items': [], 'cart.totalPrice': 0 } }
             );
         })
-        .then(result => {
-            if (result) {
-                res.redirect('/orders');
-            }
+        .then(() => {
+            res.redirect('/orders');
         })
         .catch(err => {
             const error = new Error(err);
