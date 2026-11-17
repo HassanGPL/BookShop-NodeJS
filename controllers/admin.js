@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Product = require('../models/product');
 const { validationResult } = require('express-validator');
 
+const deleteFile = require('../utils/file');
+
 exports.getProducts = (req, res, next) => {
     Product.find({ userId: req.user._id })
         .then(products => {
@@ -141,6 +143,7 @@ exports.postEditProduct = (req, res, next) => {
             product.price = price;
             product.description = description;
             if (image) {
+                deleteFile(product.imageUrl);
                 product.imageUrl = image.path;
             }
             return product.save()
@@ -158,8 +161,14 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
     const productId = req.body.productId;
-    Product.deleteOne({ _id: productId, userId: req.user._id })
-        .then(result => {
+    Product.findOne({ _id: productId, userId: req.user._id })
+        .then(product => {
+            if (!product) {
+                return next(new Error('Product not found.'));
+            }
+            deleteFile(product.imageUrl);
+            return Product.deleteOne({ _id: productId, userId: req.user._id });
+        }).then(result => {
             if (result.deletedCount === 0) {
                 return res.redirect('/');
             }
