@@ -5,22 +5,62 @@
     <body>
         <%- include('../includes/nav.ejs') %>
             <main>
-                <% if (orders.length <=0) { %>
-                    <h1>Nothing there!</h1>
+                <% if (orders.length <= 0) { %>
+                    <section class="orders__empty">
+                        <h1>No orders yet</h1>
+                        <p>When you place an order, it will appear here.</p>
+                        <a href="/" class="btn">Continue shopping</a>
+                    </section>
                     <% } else { %>
+                        <div class="orders__heading">
+                            <div>
+                                <p class="orders__eyebrow">Purchase history</p>
+                                <h1>Your Orders</h1>
+                            </div>
+                            <span class="orders__count"><%= orders.length %> <%= orders.length === 1 ? 'order' : 'orders' %></span>
+                        </div>
                         <ul class="orders">
                             <% orders.forEach(order=> { %>
+                                <% let orderTotal = 0; %>
+                                <% order.products.forEach(p => { orderTotal += p.quantity * p.product.price; }); %>
                                 <li class="orders__item">
-                                    <h1>Order - # <%= order._id %>
-                                    </h1>
+                                    <header class="orders__item-header">
+                                        <div>
+                                            <span class="orders__label">Order</span>
+                                            <h2>#<%= order._id.toString().slice(-10).toUpperCase() %></h2>
+                                        </div>
+                                        <div class="orders__meta">
+                                            <div>
+                                                <span class="orders__label">Placed</span>
+                                                <strong><%= order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Recently' %></strong>
+                                            </div>
+                                            <div>
+                                                <span class="orders__label">Status</span>
+                                                <strong class="orders__status">Confirmed</strong>
+                                            </div>
+                                        </div>
+                                    </header>
                                     <ul class="orders__products">
                                         <% order.products.forEach(p=> { %>
                                             <li class="orders__products-item">
-                                                <%= p.product.title %> (<%= p.quantity %>)
+                                                <div class="orders__product-info">
+                                                    <span class="orders__quantity"><%= p.quantity %></span>
+                                                    <div>
+                                                        <h3><%= p.product.title %></h3>
+                                                        <p>$<%= Number(p.product.price).toFixed(2) %></p>
+                                                    </div>
+                                                </div>
+                                                <strong class="orders__line-total">$<%= (p.quantity * p.product.price).toFixed(2) %></strong>
                                             </li>
                                             <% }); %>
                                     </ul>
-                                    <a href="/orders/<%= order._id %>" class="btn orders__invoice-btn">View invoice</a>
+                                    <footer class="orders__item-footer">
+                                        <div class="orders__total">
+                                            <span>Total</span>
+                                            <strong>$<%= orderTotal.toFixed(2) %></strong>
+                                        </div>
+                                        <a href="/orders/<%= order._id %>" class="btn orders__invoice-btn">View invoice</a>
+                                    </footer>
                                 </li>
                                 <% }); %>
                         </ul>

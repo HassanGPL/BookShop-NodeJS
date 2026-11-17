@@ -3,8 +3,17 @@
 
     <body>
         <%- include('includes/nav.ejs') %>
-            <main>
-                <h1>Page Not Found!</h1>
+            <main class="error-page">
+                <section class="error-page__card">
+                    <p class="error-page__code">404</p>
+                    <p class="error-page__eyebrow">Lost in the stacks?</p>
+                    <h1>We can’t find that page.</h1>
+                    <p>The page may have moved, or the link might be out of date. Let’s get you back to the books.</p>
+                    <div class="error-page__actions">
+                        <a class="btn error-page__primary" href="/">Back to the shop</a>
+                        <a class="error-page__secondary" href="/products">Browse all books</a>
+                    </div>
+                </section>
             </main>
     </body>
 

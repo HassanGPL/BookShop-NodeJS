@@ -5,39 +5,73 @@
 
     <body>
         <%- include('../includes/nav.ejs') %>
-            <main>
-                <div>
-                    <% if (errorMessage && errorMessage.length> 0) { %>
-                        <div class="flash-message">
-                            <%= errorMessage %>
+            <main class="auth-page auth-page--signup">
+                <section class="auth-layout">
+                    <aside class="auth-aside">
+                        <a class="auth-brand" href="/" aria-label="BookShop home">
+                            <span class="auth-brand__mark">B</span>
+                            <span>BookShop</span>
+                        </a>
+                        <div class="auth-aside__copy">
+                            <p class="auth-aside__eyebrow">Make room for a new favorite</p>
+                            <h1>Your next chapter starts here.</h1>
+                            <p>Create your account and explore a collection made for curious readers.</p>
                         </div>
+                        <div class="auth-book-art" aria-hidden="true">
+                            <span class="auth-book auth-book--one"></span>
+                            <span class="auth-book auth-book--two"></span>
+                            <span class="auth-book auth-book--three"></span>
+                            <span class="auth-book-art__sparkle">✦</span>
+                        </div>
+                        <p class="auth-aside__footer">Stories, knowledge, and inspiration await.</p>
+                    </aside>
+
+                    <div class="auth-card">
+                        <header class="auth-card__header">
+                            <p class="auth-card__eyebrow">Join the community</p>
+                            <h2>Create your account</h2>
+                            <p>It only takes a moment to get started.</p>
+                        </header>
+
+                        <% if (errorMessage && errorMessage.length > 0) { %>
+                            <div class="flash-message auth-error" role="alert">
+                                <%= errorMessage %>
+                            </div>
                         <% } %>
-                </div>
-                <form class="login-form" action="/signup" method="POST" novalidate>
-                    <div class="form-control">
-                        <label for="name">Name</label>
-                        <input class="<%= validationErrors.find(e => e.path === 'name') ? 'invalid' : '' %>" type="name"
-                            name="name" id="name" value="<%= oldInput.name %>">
+
+                        <form class="auth-form" action="/signup" method="POST" novalidate>
+                            <div class="form-control">
+                                <label for="name">Your name</label>
+                                <input class="<%= validationErrors.find(e => e.path === 'name') ? 'invalid' : '' %>"
+                                    type="text" name="name" id="name" value="<%= oldInput.name %>"
+                                    placeholder="How should we address you?" autocomplete="name" required>
+                            </div>
+                            <div class="form-control">
+                                <label for="email">Email address</label>
+                                <input class="<%= validationErrors.find(e => e.path === 'email') ? 'invalid' : '' %>"
+                                    type="email" name="email" id="email" value="<%= oldInput.email %>"
+                                    placeholder="you@example.com" autocomplete="email" required>
+                            </div>
+                            <div class="form-control">
+                                <label for="password">Password</label>
+                                <input class="<%= validationErrors.find(e => e.path === 'password') ? 'invalid' : '' %>"
+                                    type="password" name="password" id="password"
+                                    placeholder="At least 8 characters" autocomplete="new-password" required>
+                                <small class="auth-field-hint">Use at least 8 characters.</small>
+                            </div>
+                            <div class="form-control">
+                                <label for="confirm-password">Confirm password</label>
+                                <input class="<%= validationErrors.find(e => e.path === 'confirmPassword') ? 'invalid' : '' %>"
+                                    type="password" name="confirmPassword" id="confirm-password"
+                                    placeholder="Enter your password again" autocomplete="new-password" required>
+                            </div>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button class="auth-submit" type="submit">Create account</button>
+                        </form>
+
+                        <p class="auth-card__switch">Already have an account? <a href="/login">Sign in</a></p>
                     </div>
-                    <div class="form-control">
-                        <label for="email">E-mail</label>
-                        <input class="<%= validationErrors.find(e => e.path === 'email') ? 'invalid' : '' %>"
-                            type="email" name="email" id="email" value="<%= oldInput.email %>">
-                    </div>
-                    <div class="form-control">
-                        <label for="password">Password</label>
-                        <input class="<%= validationErrors.find(e => e.path === 'password') ? 'invalid' : '' %>"
-                            type="password" name="password" id="password" value="<%= oldInput.password %>">
-                    </div>
-                    <div class="form-control">
-                        <label for="confirm-password">Confirm Password</label>
-                        <input class="<%= validationErrors.find(e => e.path === 'confirmPassword') ? 'invalid' : '' %>"
-                            type="password" name="confirmPassword" id="confirm-password"
-                            value="<%= oldInput.confirmPassword %>">
-                    </div>
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <button class="btn" type="submit">Signup</button>
-                </form>
+                </section>
             </main>
             <script src="/js/main.js"></script>
     </body>

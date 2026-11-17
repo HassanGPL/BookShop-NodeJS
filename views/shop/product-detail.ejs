@@ -1,23 +1,35 @@
 <%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/product.css">
     </head>
 
     <body>
         <%- include('../includes/nav.ejs') %>
-            <main class="centered">
-                <h1>
-                    <%= product.title %>
-                </h1>
-                <hr>
-                <div>
-                    <img src="<%= product.imageUrl %>" alt="<%= product.title %>" class="image">
-                </div>
-                <h2>
-                    $ <%= product.price %>
-                </h2>
-                <h3>
-                    <%= product.description %>
-                </h3>
-                <%- include('../includes/add-to-cart.ejs') %>
+            <main class="product-detail-page">
+                <nav class="product-detail__breadcrumb" aria-label="Breadcrumb">
+                    <a href="/">Shop</a>
+                    <span aria-hidden="true">/</span>
+                    <a href="/products">All products</a>
+                    <span aria-hidden="true">/</span>
+                    <span aria-current="page"><%= product.title %></span>
+                </nav>
+
+                <article class="product-detail">
+                    <div class="product-detail__image-wrap">
+                        <img src="/<%= product.imageUrl %>" alt="<%= product.title %>" class="product-detail__image">
+                    </div>
+                    <section class="product-detail__info">
+                        <p class="product-detail__eyebrow">Book details</p>
+                        <h1><%= product.title %></h1>
+                        <p class="product-detail__price">$<%= Number(product.price).toFixed(2) %></p>
+                        <div class="product-detail__divider"></div>
+                        <h2>About this book</h2>
+                        <p class="product-detail__description"><%= product.description %></p>
+                        <div class="product-detail__actions">
+                            <%- include('../includes/add-to-cart.ejs', { product: product }) %>
+                            <a class="product-detail__back" href="/products">Continue browsing</a>
+                        </div>
+                    </section>
+                </article>
             </main>
             <script src="/js/main.js"></script>
     </body>

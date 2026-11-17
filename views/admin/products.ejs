@@ -6,41 +6,90 @@
         <%- include('../includes/nav.ejs') %>
 
             <main>
-                <% if (products.length> 0) { %>
-                    <div class="grid">
-                        <% for (let product of products) { %>
-                            <article class="card product-item">
-                                <header class="card__header">
-                                    <h1 class="product__title">
-                                        <%= product.title %>
-                                    </h1>
-                                </header>
-                                <div class="card__image">
-                                    <img src="/<%= product.imageUrl %>" alt="<%= product.title %>">
-                                </div>
-                                <div class="card__content">
-                                    <h2 class="product__price">$
-                                        <%= product.price %>
-                                    </h2>
-                                    <p class="product__description">
-                                        <%= product.description %>
-                                    </p>
-                                </div>
-                                <div class="card__actions">
-                                    <a href="/admin/edit-product/<%= product._id %>?edit=true" class="btn">Edit</a>
-                                    <form action="/admin/delete-product" method="POST">
-                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                        <input type="hidden" name="productId" value="<%= product._id %>">
-                                        <button class="btn danger" type="submit">Delete</button>
-                                    </form>
+                <section class="admin-dashboard">
+                    <header class="admin-dashboard__header">
+                        <div>
+                            <p class="admin-dashboard__eyebrow">Admin workspace</p>
+                            <h1>Books inventory</h1>
+                            <p class="admin-dashboard__intro">Manage your catalog, update book details, and keep your listings organized.</p>
+                        </div>
+                        <a href="/admin/add-product" class="admin-dashboard__add">+ Add a book</a>
+                    </header>
 
-                                </div>
+                    <section class="admin-dashboard__stats" aria-label="Catalog summary">
+                        <article class="admin-stat">
+                            <span class="admin-stat__icon" aria-hidden="true">B</span>
+                            <div>
+                                <p>Total books</p>
+                                <strong><%= products.length %></strong>
+                            </div>
+                        </article>
+                        <article class="admin-stat">
+                            <span class="admin-stat__icon admin-stat__icon--value" aria-hidden="true">$</span>
+                            <div>
+                                <p>Catalog value</p>
+                                <strong>$<%= Number(catalogValue).toFixed(2) %></strong>
+                            </div>
+                        </article>
+                        <article class="admin-stat">
+                            <span class="admin-stat__icon" aria-hidden="true">A</span>
+                            <div>
+                                <p>Average price</p>
+                                <strong>$<%= Number(averagePrice).toFixed(2) %></strong>
+                            </div>
+                        </article>
+                    </section>
+
+                    <section class="admin-catalog">
+                        <div class="admin-catalog__heading">
+                            <div>
+                                <h2>Your books</h2>
+                                <p>Review and manage the products in your catalog.</p>
+                            </div>
+                            <% if (products.length > 0) { %>
+                                <label class="admin-catalog__search">
+                                    <span class="visually-hidden">Search your books</span>
+                                    <input id="admin-product-search" type="search" placeholder="Search books..." autocomplete="off">
+                                </label>
+                            <% } %>
+                        </div>
+
+                        <% if (products.length > 0) { %>
+                            <div class="admin-product-grid">
+                        <% for (let product of products) { %>
+                                <article class="admin-product-card" data-search="<%= (product.title + ' ' + product.description).toLowerCase() %>">
+                                    <div class="admin-product-card__image">
+                                        <img src="/<%= product.imageUrl %>" alt="<%= product.title %>">
+                                    </div>
+                                    <div class="admin-product-card__body">
+                                        <div class="admin-product-card__details">
+                                            <h3><%= product.title %></h3>
+                                            <p><%= product.description %></p>
+                                        </div>
+                                        <strong class="admin-product-card__price">$<%= Number(product.price).toFixed(2) %></strong>
+                                    </div>
+                                    <footer class="admin-product-card__actions">
+                                        <a href="/admin/edit-product/<%= product._id %>?edit=true" class="admin-product-card__edit">Edit details</a>
+                                        <form action="/admin/delete-product" method="POST">
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                            <input type="hidden" name="productId" value="<%= product._id %>">
+                                            <button class="admin-product-card__delete" type="submit">Delete</button>
+                                        </form>
+                                    </footer>
                             </article>
                             <% } %>
-                    </div>
+                            </div>
+                            <p class="admin-catalog__no-results" id="admin-product-no-results" hidden>No books match your search.</p>
                     <% } else { %>
-                        <h1>No Products Found!</h1>
+                            <div class="admin-catalog__empty">
+                                <span aria-hidden="true">＋</span>
+                                <h3>Your catalog is ready for its first book</h3>
+                                <p>Add a product to start building and managing your book collection.</p>
+                                <a href="/admin/add-product" class="admin-dashboard__add">Add your first book</a>
+                            </div>
                         <% } %>
+                    </section>
+                </section>
             </main>
             <script src="/js/main.js"></script>
     </body>

@@ -5,24 +5,38 @@
     <body>
         <%- include('../includes/nav.ejs') %>
             <main>
+                <section class="catalog-hero">
+                    <div>
+                        <p class="catalog-hero__eyebrow">Discover your next read</p>
+                        <h1>Books for every kind of reader</h1>
+                        <p>Explore a curated collection of stories, ideas, and inspiration.</p>
+                    </div>
+                    <a href="/products" class="catalog-hero__button">Browse all products</a>
+                </section>
                 <%if(products.length> 0) { %>
-                    <div class="grid">
+                    <div class="catalog-heading">
+                        <div>
+                            <p>Featured collection</p>
+                            <h2>Shop our books</h2>
+                        </div>
+                        <span><%= products.length %> <%= products.length === 1 ? 'book' : 'books' %></span>
+                    </div>
+                    <div class="grid catalog-grid">
                         <% for(let product of products) {%>
-                            <article class="card product-item">
-                                <header class="card__header">
-                                    <h1 class="product__title">
-                                        <%= product.title %>
-                                    </h1>
-                                </header>
+                            <article class="card product-item catalog-card">
                                 <div class="card__image">
-                                    <img src="<%= product.imageUrl %>" alt="<%= product.title %>">
+                                    <a href="/products/<%= product._id %>" aria-label="View <%= product.title %>">
+                                        <img src="<%= product.imageUrl %>" alt="<%= product.title %>">
+                                    </a>
                                 </div>
                                 <div class="card__content">
-                                    <h2 class="product__price">$ <%= product.price %>
-                                    </h2>
+                                    <h1 class="product__title">
+                                        <a href="/products/<%= product._id %>"><%= product.title %></a>
+                                    </h1>
                                     <p class="product__description">
                                         <%= product.description %>
                                     </p>
+                                    <h2 class="product__price">$<%= Number(product.price).toFixed(2) %></h2>
                                 </div>
                                 <div class="card__actions">
                                     <%- include('../includes/add-to-cart.ejs',{product:product}) %>

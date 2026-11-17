@@ -1,35 +1,180 @@
 .orders {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
+  max-width: 900px;
 }
 
-.orders__item h1 {
-    margin: 0;
-    font-size: 1rem;
+main {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
 }
 
 .orders__item {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  padding: 1rem;
-  margin-bottom: 1rem;
+  background: #fff;
+  border: 1px solid #d8e3e1;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(38, 59, 57, 0.08);
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+
+.orders__heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  max-width: 900px;
+  margin: 0 auto 1rem;
+}
+
+.orders__heading h1,
+.orders__empty h1 {
+  margin: 0.15rem 0 0;
+  color: #263b39;
+  font-size: 1.75rem;
+}
+
+.orders__eyebrow {
+  margin: 0;
+  color: #00695c;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.orders__count {
+  border-radius: 999px;
+  background: #edf5f3;
+  color: #35645f;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.orders__item-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid #d8e3e1;
+  background: #edf5f3;
+}
+
+.orders__item-header h2 {
+  margin: 0.15rem 0 0;
+  color: #263b39;
+  font-size: 1.1rem;
+}
+
+.orders__label {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: #35645f;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.orders__meta {
+  display: flex;
+  gap: 2.5rem;
+  text-align: right;
+}
+
+.orders__meta strong {
+  color: #263b39;
+  font-size: 0.85rem;
+}
+
+.orders__status {
+  display: inline-block;
+  border-radius: 999px;
+  background: #dfeeea;
+  color: #00695c;
+  padding: 0.2rem 0.55rem;
 }
 
 .orders__products {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0 1.25rem;
 }
 
 .orders__products-item {
-    margin: 0.5rem 0;
-    padding: 0.5rem;
-    border: 1px solid #00695c;
-    color: #00695c;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 72px;
+  border-bottom: 1px solid #d8e3e1;
+  color: #263b39;
+}
+
+.orders__products-item:last-child {
+  border-bottom: 0;
+}
+
+.orders__product-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.orders__quantity {
+  display: grid;
+  flex: 0 0 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 8px;
+  background: #edf5f3;
+  color: #00695c;
+  font-weight: 700;
+}
+
+.orders__product-info h3 {
+  margin: 0 0 0.2rem;
+  font-size: 0.95rem;
+}
+
+.orders__product-info p {
+  margin: 0;
+  color: #35645f;
+  font-size: 0.78rem;
+}
+
+.orders__line-total {
+  flex: 0 0 auto;
+  color: #263b39;
+  font-size: 0.95rem;
+}
+
+.orders__item-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #d8e3e1;
+  background: #fafcfb;
+}
+
+.orders__total {
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  color: #35645f;
+}
+
+.orders__total strong {
+  color: #263b39;
+  font-size: 1.25rem;
 }
 
 .orders__invoice-btn {
-  margin-top: 0.5rem;
   padding: 0.55rem 1.1rem;
   border: 1px solid #00695c;
   border-radius: 6px;
@@ -52,4 +197,53 @@
 .orders__invoice-btn:focus-visible {
   outline: 3px solid rgba(0, 105, 92, 0.35);
   outline-offset: 3px;
+}
+
+.orders__empty {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 3rem 1.5rem;
+  border: 1px solid #d8e3e1;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.orders__empty p {
+  margin: 0.75rem 0 1.25rem;
+  color: #35645f;
+}
+
+@media (max-width: 600px) {
+  .orders__heading,
+  .orders__item-header,
+  .orders__item-footer {
+    align-items: flex-start;
+  }
+
+  .orders__item-header {
+    flex-direction: column;
+  }
+
+  .orders__meta {
+    width: 100%;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .orders__item-footer {
+    flex-direction: column;
+  }
+
+  .orders__total,
+  .orders__invoice-btn {
+    width: 100%;
+  }
+
+  .orders__total {
+    justify-content: space-between;
+  }
+
+  .orders__invoice-btn {
+    text-align: center;
+  }
 }

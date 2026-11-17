@@ -3,9 +3,17 @@
 
     <body>
         <%- include('includes/nav.ejs') %>
-            <main>
-                <h1>Internal Server Error!</h1>
-                <h3>Something went wrong on our end. Please try again later.</h3>
+            <main class="error-page">
+                <section class="error-page__card">
+                    <p class="error-page__code">500</p>
+                    <p class="error-page__eyebrow">A brief pause in the story</p>
+                    <h1>Something went wrong.</h1>
+                    <p>We hit an unexpected issue on our end. Please try again in a little while.</p>
+                    <div class="error-page__actions">
+                        <a class="btn error-page__primary" href="/">Return to the shop</a>
+                        <a class="error-page__secondary" href="/products">Browse all books</a>
+                    </div>
+                </section>
             </main>
     </body>
 

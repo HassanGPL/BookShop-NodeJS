@@ -4,16 +4,29 @@
 
     <body>
         <%- include('../includes/nav.ejs') %>
-            <main>
-                <% if (products.length> 0) { %>
+            <main class="cart-page">
+                <header class="cart__header">
+                    <div>
+                        <p class="cart__eyebrow">Your selection</p>
+                        <h1>Your Cart</h1>
+                        <p>Review your books before placing your order.</p>
+                    </div>
+                    <% if (products.length > 0) { %>
+                        <span class="cart__count"><%= products.length %> <%= products.length === 1 ? 'book' : 'books' %></span>
+                    <% } %>
+                </header>
+                <% if (products.length > 0) { %>
                     <ul class="cart__item-list">
-                        <% products.forEach(p=> { %>
+                        <% products.forEach(p => { %>
                             <li class="cart__item">
+                                <div class="cart__image">
+                                    <img src="/<%= p.imageUrl %>" alt="<%= p.title %>">
+                                </div>
                                 <div class="cart__product">
                                     <h1 class="cart__product-title">
                                         <%= p.title %>
                                     </h1>
-                                    <span class="cart__unit-price">$<%= Number(p.price).toFixed(2) %> each</span>
+                                    <span class="cart__unit-price">$<%= Number(p.price).toFixed(2) %></span>
                                 </div>
                                 <span class="cart__quantity">Qty <strong>
                                         <%= p.quantity %>
@@ -22,25 +35,31 @@
                                     <span>Item total</span>
                                     <strong>$<%= (p.price * p.quantity).toFixed(2) %></strong>
                                 </div>
-                                <form action="/cart-delete-item" method="POST">
+                                    <form class="cart__remove-form" action="/cart-delete-item" method="POST">
                                     <input type="hidden" value="<%= p._id %>" name="productId">
-                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">            
-                                    <button class="btn danger cart__remove" type="submit">Remove</button>
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <button class="cart__remove" type="submit">Remove</button>
                                 </form>
                             </li>
                             <% }) %>
                     </ul>
-                    <hr>
                     <div class="cart__summary">
-                        <h2>Total: $<%= totalPrice.toFixed(2) %>
-                        </h2>
+                            <div class="cart__summary-details">
+                                <span>Order total</span>
+                                <strong>$<%= totalPrice.toFixed(2) %></strong>
+                            </div>
                         <form action="/create-order" method="post">
                             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                            <button type="submit" class="btn"> Order Now! </button>
+                                <button type="submit" class="btn cart__order-btn">Place order</button>
                         </form>
                     </div>
                     <% } else { %>
-                        <h1>No Products in Cart!</h1>
+                            <section class="cart__empty">
+                                <span class="cart__empty-icon" aria-hidden="true">B</span>
+                                <h2>Your cart is waiting for a good book</h2>
+                                <p>Browse the collection and add something you’d love to read.</p>
+                                <a class="btn cart__browse-btn" href="/products">Browse books</a>
+                            </section>
                         <% } %>
             </main>
             <script src="/js/main.js"></script>

@@ -7,8 +7,15 @@ const deleteFile = require('../utils/file');
 exports.getProducts = (req, res, next) => {
     Product.find({ userId: req.user._id })
         .then(products => {
+            const catalogValue = products.reduce((total, product) => {
+                return total + Number(product.price);
+            }, 0);
+            const averagePrice = products.length > 0 ? catalogValue / products.length : 0;
+
             res.render('admin/products', {
                 products: products,
+                catalogValue: catalogValue,
+                averagePrice: averagePrice,
                 pageTitle: "Admin Products",
                 path: '/admin/products'
             });
