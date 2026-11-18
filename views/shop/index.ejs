@@ -19,7 +19,7 @@
                             <p>Featured collection</p>
                             <h2>Shop our books</h2>
                         </div>
-                        <span><%= products.length %> <%= products.length === 1 ? 'book' : 'books' %></span>
+                        <span><%= totalProducts %> <%= totalProducts === 1 ? 'book' : 'books' %></span>
                     </div>
                     <div class="grid catalog-grid">
                         <% for(let product of products) {%>
@@ -44,6 +44,7 @@
                             </article>
                             <% } %>
                     </div>
+                    <%- include('../includes/pagination.ejs', { currentPage: currentPage, totalPages: totalPages, basePath: '/' }) %>
                     <% } else { %>
                         <h1>No Products Found!</h1>
                         <% } %>

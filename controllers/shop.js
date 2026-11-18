@@ -6,36 +6,46 @@ const Product = require('../models/product');
 const Order = require('../models/order');
 const User = require('../models/user');
 
-exports.getIndex = (req, res, next) => {
-    Product.find()
-        .then(products => {
-            res.render('shop/index', {
-                products: products,
-                pageTitle: "Shop",
-                path: '/'
-            });
+const PRODUCTS_PER_PAGE = 3;
+
+const renderProductPage = (req, res, next, template, pageTitle, routePath) => {
+    const requestedPage = Number(req.query.page);
+    const page = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+
+    Product.countDocuments()
+        .then(totalProducts => {
+            const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
+            const currentPage = totalPages === 0 ? 1 : Math.min(page, totalPages);
+
+            return Product.find()
+                .sort({ _id: 1 })
+                .skip((currentPage - 1) * PRODUCTS_PER_PAGE)
+                .limit(PRODUCTS_PER_PAGE)
+                .then(products => {
+                    res.render(template, {
+                        products: products,
+                        totalProducts: totalProducts,
+                        currentPage: currentPage,
+                        totalPages: totalPages,
+                        pageTitle: pageTitle,
+                        path: routePath
+                    });
+                });
         })
         .catch(err => {
             const error = new Error(err);
             error.httpStatusCode = 500;
             return next(error);
         });
+};
+
+exports.getIndex = (req, res, next) => {
+    renderProductPage(req, res, next, 'shop/index', 'Shop', '/');
 }
 
 
 exports.getProducts = (req, res, next) => {
-    Product.find()
-        .then(products => {
-            res.render('shop/product-list', {
-                products: products,
-                pageTitle: "All Products",
-                path: '/products'
-            });
-        }).catch(err => {
-            const error = new Error(err);
-            error.httpStatusCode = 500;
-            return next(error);
-        });
+    renderProductPage(req, res, next, 'shop/product-list', 'All Products', '/products');
 }
 
 exports.getProduct = (req, res, next) => {

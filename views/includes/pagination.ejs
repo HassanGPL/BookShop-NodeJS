@@ -1,0 +1,12 @@
+<% if (totalPages > 1) { %>
+    <nav class="pagination" aria-label="Product pages">
+        <a class="pagination__link" href="<%= basePath %>?page=1" <% if (currentPage === 1) { %>aria-disabled="true" tabindex="-1"<% } %>>First</a>
+        <a class="pagination__link" href="<%= basePath %>?page=<%= Math.max(1, currentPage - 1) %>" <% if (currentPage === 1) { %>aria-disabled="true" tabindex="-1"<% } %>>Previous</a>
+        <% for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) { %>
+            <a class="pagination__link <%= pageNumber === currentPage ? 'pagination__link--current' : '' %>"
+                href="<%= basePath %>?page=<%= pageNumber %>"
+                <% if (pageNumber === currentPage) { %>aria-current="page"<% } %>><%= pageNumber %></a>
+        <% } %>
+        <a class="pagination__link" href="<%= basePath %>?page=<%= Math.min(totalPages, currentPage + 1) %>" <% if (currentPage === totalPages) { %>aria-disabled="true" tabindex="-1"<% } %>>Next</a>
+    </nav>
+<% } %>
