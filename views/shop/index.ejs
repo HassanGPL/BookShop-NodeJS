@@ -26,7 +26,7 @@
                             <article class="card product-item catalog-card">
                                 <div class="card__image">
                                     <a href="/products/<%= product._id %>" aria-label="View <%= product.title %>">
-                                        <img src="<%= product.imageUrl %>" alt="<%= product.title %>">
+                                        <img src="/<%= product.imageUrl.replace(/\\/g, '/') %>" alt="<%= product.title %>">
                                     </a>
                                 </div>
                                 <div class="card__content">

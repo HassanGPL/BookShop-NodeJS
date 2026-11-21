@@ -15,7 +15,7 @@
 
                 <article class="product-detail">
                     <div class="product-detail__image-wrap">
-                        <img src="/<%= product.imageUrl %>" alt="<%= product.title %>" class="product-detail__image">
+                        <img src="/<%= product.imageUrl.replace(/\\/g, '/') %>" alt="<%= product.title %>" class="product-detail__image">
                     </div>
                     <section class="product-detail__info">
                         <p class="product-detail__eyebrow">Book details</p>

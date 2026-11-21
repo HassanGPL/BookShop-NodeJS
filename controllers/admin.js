@@ -4,6 +4,8 @@ const { validationResult } = require('express-validator');
 
 const deleteFile = require('../utils/file');
 
+const normalizeImagePath = (imagePath) => imagePath.replace(/\\/g, '/');
+
 exports.getProducts = (req, res, next) => {
     Product.find({ userId: req.user._id })
         .then(products => {
@@ -67,7 +69,7 @@ exports.postAddProduct = (req, res, next) => {
         });
     }
 
-    const imageUrl = image.path;
+    const imageUrl = normalizeImagePath(image.path);
 
     const product = new Product({
         title: title,
@@ -151,7 +153,7 @@ exports.postEditProduct = (req, res, next) => {
             product.description = description;
             if (image) {
                 deleteFile(product.imageUrl);
-                product.imageUrl = image.path;
+                product.imageUrl = normalizeImagePath(image.path);
             }
             return product.save()
                 .then(() => {
@@ -166,25 +168,25 @@ exports.postEditProduct = (req, res, next) => {
         });
 }
 
-exports.postDeleteProduct = (req, res, next) => {
-    const productId = req.body.productId;
+exports.deleteProduct = (req, res, next) => {
+    const productId = req.params.productId;
     Product.findOne({ _id: productId, userId: req.user._id })
         .then(product => {
             if (!product) {
-                return next(new Error('Product not found.'));
+                return res.status(404).json({ message: 'Product not found.' });
             }
             deleteFile(product.imageUrl);
             return Product.deleteOne({ _id: productId, userId: req.user._id });
         }).then(result => {
-            if (result.deletedCount === 0) {
-                return res.redirect('/');
+            if (!result) {
+                return;
             }
-            console.log('DELETED PRODUCT SUCCESSFULLY!')
-            res.redirect('/admin/products');
+            if (result.deletedCount === 0) {
+                return res.status(404).json({ message: 'Product not found.' });
+            }
+            res.status(200).json({ message: 'Product deleted successfully.' });
         })
         .catch(err => {
-            const error = new Error(err);
-            error.httpStatusCode = 500;
-            return next(error);
+            next(err);
         });
-}
+};

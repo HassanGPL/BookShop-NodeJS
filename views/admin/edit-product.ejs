@@ -60,7 +60,7 @@
                                             <label for="image">Product image</label>
                                             <div class="image-upload">
                                                 <img id="product-image-preview"
-                                                    src="<%= editing && oldInput.imageUrl ? '/' + oldInput.imageUrl : '' %>"
+                                                    src="<%= editing && oldInput.imageUrl ? '/' + oldInput.imageUrl.replace(/\\/g, '/') : '' %>"
                                                     alt="Product preview"
                                                     class="<%= editing && oldInput.imageUrl ? 'is-visible' : '' %>">
                                                 <div class="image-upload__placeholder">

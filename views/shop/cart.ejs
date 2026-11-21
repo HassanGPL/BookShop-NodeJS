@@ -20,7 +20,7 @@
                         <% products.forEach(p => { %>
                             <li class="cart__item">
                                 <div class="cart__image">
-                                    <img src="/<%= p.imageUrl %>" alt="<%= p.title %>">
+                                    <img src="/<%= p.imageUrl.replace(/\\/g, '/') %>" alt="<%= p.title %>">
                                 </div>
                                 <div class="cart__product">
                                     <h1 class="cart__product-title">
